@@ -10,7 +10,7 @@ enum ROOT_DIR {
 export const saveFile = (file: any, UUID: string, isPrivate: boolean = false) => {
     return new Promise(function (resolve, reject) {
         const rootPath = getFileSavePath(getFileType(file.originalname), isPrivate);
-        const path = `${rootPath}/${UUID}_${file.originalname}`;
+        const path = `${rootPath}/${UUID}_${chargeFileNameCode(file.originalname)}`;
         writeFile(path, file.buffer, (err) => {
             if (err) {
                 reject(err);
@@ -23,7 +23,7 @@ export const saveFile = (file: any, UUID: string, isPrivate: boolean = false) =>
 export const saveFileByBuffer = (fileName: any, buffer: string | NodeJS.ArrayBufferView, UUID: string, isPrivate: boolean = false) => {
     return new Promise(function (resolve, reject) {
         const rootPath = getFileSavePath(getFileType(fileName), isPrivate);
-        const path = `${rootPath}/${UUID}_${fileName}`;
+        const path = `${rootPath}/${UUID}_${chargeFileNameCode(file.originalname)}`;
         writeFile(path, buffer, (err) => {
             if (err) {
                 reject(err);
@@ -32,6 +32,10 @@ export const saveFileByBuffer = (fileName: any, buffer: string | NodeJS.ArrayBuf
             }
         });
     });
+}
+// 解决中文文件名乱码问题
+export const chargeFileNameCode = (fileName: string) => {
+    return Buffer.from(fileName, 'latin1').toString('utf-8');
 }
 export const getFileUrl = (fileName: string, UUID: string, fileType: number, isPrivate: boolean = false) => {
     const path = ['image', 'video', 'audio', 'doc', 'software', 'GZIP', 'other'];
